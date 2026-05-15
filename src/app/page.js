@@ -118,6 +118,7 @@ export default function ChatUI() {
 
   const [chatList, setChatList] = useState([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSafeMode, setIsSafeMode] = useState(true);
 
   const scrollToBottom = () => {
     if (editingIndex === null) {
@@ -585,18 +586,81 @@ ${messagesContextText}`;
         .animate-breathe {
           animation: breathe 20s ease-in-out infinite;
         }
+        .safe-mode img {
+          display: none !important;
+        }
+        .safe-mode * {
+          border-color: #262626 !important;
+        }
+        .safe-mode .bg-\[\#0a0508\],
+        .safe-mode .bg-\[\#120a0f\],
+        .safe-mode .bg-\[\#160b13\],
+        .safe-mode .bg-rose-950,
+        .safe-mode .bg-rose-900,
+        .safe-mode .bg-rose-600,
+        .safe-mode .bg-rose-500,
+        .safe-mode .bg-rose-400,
+        .safe-mode .bg-pink-600,
+        .safe-mode .bg-pink-500,
+        .safe-mode .bg-pink-400 {
+          background-color: #0a0a0a !important;
+          background-image: none !important;
+        }
+        .safe-mode .bg-gradient-to-br,
+        .safe-mode .bg-gradient-to-r,
+        .safe-mode .bg-gradient-to-t,
+        .safe-mode .bg-gradient-to-l {
+          background: #0a0a0a !important;
+        }
+        .safe-mode .text-rose-50,
+        .safe-mode .text-rose-100,
+        .safe-mode .text-rose-200,
+        .safe-mode .text-rose-300,
+        .safe-mode .text-rose-400,
+        .safe-mode .text-rose-500,
+        .safe-mode .text-rose-600,
+        .safe-mode .text-rose-700,
+        .safe-mode .text-rose-800,
+        .safe-mode .text-rose-900,
+        .safe-mode .text-pink-400,
+        .safe-mode .text-transparent {
+          color: #d4d4d4 !important;
+          background-clip: unset !important;
+          -webkit-background-clip: unset !important;
+          background-image: none !important;
+        }
+        .safe-mode .border-rose-950,
+        .safe-mode .border-rose-900,
+        .safe-mode .border-rose-800,
+        .safe-mode .border-rose-500 {
+          border-color: #262626 !important;
+        }
+        .safe-mode .selection\:bg-rose-500\/30 *::selection {
+          background-color: #404040 !important;
+        }
+        .safe-mode .shadow-rose-900\/20,
+        .safe-mode .shadow-rose-900\/30,
+        .safe-mode .shadow-rose-900\/40,
+        .safe-mode .shadow-rose-900\/10 {
+          shadow: none !important;
+          box-shadow: none !important;
+        }
       `}</style>
 
-      <div className="flex h-screen bg-[#0a0508] text-neutral-100 font-sans overflow-hidden selection:bg-rose-500/30">
+      <div className={`flex h-screen text-neutral-100 font-sans overflow-hidden selection:bg-rose-500/30 ${isSafeMode ? "bg-black safe-mode" : "bg-[#0a0508]"}`}>
         <aside
-          className={`fixed inset-y-0 left-0 z-40 w-64 bg-[#120a0f] border-r border-rose-950/50 transform transition-transform duration-300 ease-in-out flex flex-col ${
+          className={`fixed inset-y-0 left-0 z-40 w-64 border-r transform transition-transform duration-300 ease-in-out flex flex-col ${
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          } md:relative md:translate-x-0`}
+          } md:relative md:translate-x-0 ${isSafeMode ? "bg-black border-neutral-800" : "bg-[#120a0f] border-rose-950/50"}`}
         >
-          <div className="p-4 border-b border-rose-950/50">
+          <div className={`p-4 border-b ${isSafeMode ? "border-neutral-800" : "border-rose-950/50"}`}>
             <button
               onClick={createNewChat}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 text-white rounded-xl text-sm font-medium transition-all shadow-lg shadow-rose-900/20 hover:shadow-rose-900/40"
+              className={`w-full flex items-center justify-center gap-2 px-4 py-2.5 text-white rounded-xl text-sm font-medium transition-all shadow-lg ${
+                isSafeMode 
+                  ? "bg-neutral-800 hover:bg-neutral-700 shadow-none" 
+                  : "bg-gradient-to-r from-rose-600 to-pink-600 hover:from-rose-500 hover:to-pink-500 shadow-rose-900/20 hover:shadow-rose-900/40"
+              }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -677,12 +741,12 @@ ${messagesContextText}`;
           </div>
         </aside>
 
-        <div className="flex-1 flex flex-col h-screen relative bg-gradient-to-br from-[#0a0508] via-[#0f070b] to-[#140810]">
-          <header className="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-rose-950/30 bg-[#0a0508]/60 backdrop-blur-xl sticky top-0 z-20">
+        <div className={`flex-1 flex flex-col h-screen relative transition-colors duration-300 ${isSafeMode ? "bg-black" : "bg-gradient-to-br from-[#0a0508] via-[#0f070b] to-[#140810]"}`}>
+          <header className={`flex items-center justify-between px-4 sm:px-6 py-4 border-b backdrop-blur-xl sticky top-0 z-20 transition-colors ${isSafeMode ? "bg-black border-neutral-800" : "bg-[#0a0508]/60 border-rose-950/30"}`}>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                className="md:hidden p-2 -ml-2 text-rose-400 hover:text-rose-200 rounded-md"
+                className={`md:hidden p-2 -ml-2 rounded-md ${isSafeMode ? "text-neutral-400 hover:text-white" : "text-rose-400 hover:text-rose-200"}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -708,9 +772,20 @@ ${messagesContextText}`;
                   }
                   setView("home");
                 }}
-                className="text-lg font-serif italic tracking-wide text-rose-100 hover:text-rose-300 transition-colors drop-shadow-md"
+                className={`text-lg font-serif italic tracking-wide transition-colors drop-shadow-md ${isSafeMode ? "text-white hover:text-neutral-300" : "text-rose-100 hover:text-rose-300"}`}
               >
                 Dreamscape AI
+              </button>
+
+              <button
+                onClick={() => setIsSafeMode(!isSafeMode)}
+                className={`ml-2 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+                  isSafeMode 
+                    ? "bg-neutral-800 text-white border border-neutral-700" 
+                    : "bg-rose-950/30 text-rose-400 border border-rose-900/30 hover:bg-rose-900/20"
+                }`}
+              >
+                {isSafeMode ? "Safe Mode: ON" : "Safe Mode: OFF"}
               </button>
             </div>
 
@@ -719,8 +794,8 @@ ${messagesContextText}`;
                 onClick={() => setShowSettings(!showSettings)}
                 className={`p-2 rounded-full transition-all ${
                   showSettings
-                    ? "bg-rose-900/50 text-rose-100"
-                    : "text-rose-400 hover:text-rose-200 hover:bg-rose-950/30"
+                    ? isSafeMode ? "bg-neutral-800 text-white" : "bg-rose-900/50 text-rose-100"
+                    : isSafeMode ? "text-neutral-400 hover:text-white hover:bg-neutral-800/50" : "text-rose-400 hover:text-rose-200 hover:bg-rose-950/30"
                 }`}
               >
                 <svg
