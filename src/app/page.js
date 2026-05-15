@@ -5,7 +5,7 @@ import { fetchStreamWithRotatedKey } from "../../lib/fetchWithRotatedKeys";
 import ReactMarkdown from "react-markdown";
 
 // The model you are using that supports the reasoning stream
-const OPENROUTER_AI_MODEL = "nvidia/nemotron-3-nano-30b-a3b:free";
+const GEMINI_MODEL = "gemini-2.0-flash-lite-preview-02-05";
 
 // PRESET CHARACTERS FOR HOMEPAGE
 const PRESET_CHARACTERS = [
@@ -264,7 +264,7 @@ export default function ChatUI() {
 
     try {
       const response = await fetchStreamWithRotatedKey({
-        payload: payloadWithSchema,
+        payload: { ...payloadWithSchema, model: GEMINI_MODEL },
         signal: abortControllerRef.current.signal,
       });
 
@@ -310,37 +310,19 @@ export default function ChatUI() {
             buffer = buffer.slice(lineEnd + 1);
 
             if (line.startsWith("data: ")) {
-              const data = line.slice(6);
-              if (data === "[DONE]") break;
-
+              const dataStr = line.slice(6);
               try {
-                const parsed = JSON.parse(data);
-                const delta = parsed.choices[0]?.delta;
+                const parsed = JSON.parse(dataStr);
+                // Gemini SSE format: { "candidates": [ { "content": { "parts": [ { "text": "..." } ] } } ] }
+                const contentChunk = parsed.candidates?.[0]?.content?.parts?.[0]?.text;
 
-                if (delta) {
-                  let shouldUpdate = false;
+                if (contentChunk) {
                   const currentMsg =
                     messagesRef.current[messagesRef.current.length - 1];
-
-                  // Capture the AI's internal thought process
-                  if (delta.reasoning) {
-                    if (currentMsg.reasoning === undefined)
-                      currentMsg.reasoning = "";
-                    currentMsg.reasoning += delta.reasoning;
-                    shouldUpdate = true;
-                  }
-
-                  // Capture the actual spoken response
-                  if (delta.content) {
-                    if (currentMsg.content === undefined)
-                      currentMsg.content = "";
-                    currentMsg.content += delta.content;
-                    shouldUpdate = true;
-                  }
-
-                  if (shouldUpdate) {
-                    setMessages([...messagesRef.current]);
-                  }
+                  
+                  if (currentMsg.content === undefined) currentMsg.content = "";
+                  currentMsg.content += contentChunk;
+                  setMessages([...messagesRef.current]);
                 }
               } catch (e) {
                 // Ignore invalid JSON chunks
