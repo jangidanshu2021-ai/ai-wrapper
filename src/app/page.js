@@ -365,7 +365,7 @@ export default function ChatUI() {
       .replace(/{{user}}/g, userName || "User");
 
     const payloadWithSchema = {
-      model: OPENROUTER_AI_MODEL,
+      model: GEMINI_MODEL,
       messages: [
         { role: "system", content: dynamicSystemPrompt },
         ...getSafeRecentMessages(),
@@ -390,7 +390,7 @@ Last few messages:
 ${messagesContextText}`;
 
     const payloadWithSchema = {
-      model: OPENROUTER_AI_MODEL,
+      model: GEMINI_MODEL,
       messages: [{ role: "system", content: dynamicNarratorPrompt }],
       temperature: 0.7,
     };
@@ -492,7 +492,7 @@ ${messagesContextText}`;
       .replace(/{{user}}/g, userName || "User");
 
     const payloadWithSchema = {
-      model: OPENROUTER_AI_MODEL,
+      model: GEMINI_MODEL,
       messages: [
         { role: "system", content: dynamicSystemPrompt },
         ...getSafeRecentMessages(),
